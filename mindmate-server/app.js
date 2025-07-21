@@ -17,7 +17,7 @@ connectDb();
 // ✅ CORS setup for credentials + specific origin
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend origin
+    origin: "https://mindmate-cjgj.onrender.com", // frontend origin
     credentials: true,
   })
 );
