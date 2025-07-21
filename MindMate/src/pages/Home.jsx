@@ -113,7 +113,7 @@ export default function Home() {
             Join the MindMate community and take the first step towards a more balanced and aware self today. It's free to get started!
           </p>
           <Link
-            to="/journal" // Or a signup/onboarding page
+            to="/SignUp" // Or a signup/onboarding page
             className="inline-block bg-white text-blue-700 hover:bg-blue-100 font-bold py-4 px-12 rounded-full shadow-xl transform transition duration-300 hover:scale-105 active:scale-95 text-xl tracking-wide focus:outline-none focus:ring-4 focus:ring-blue-300"
           >
             Sign Up For Free
