@@ -1,31 +1,34 @@
 // src/components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import API from '../api/axios'; // ✅ Use axios instance with baseURL & credentials
+import API from '../api/axios';
 import { Menu, X, UserCircle, LogIn, UserPlus, LogOut, Settings } from 'lucide-react';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null); // ✅ store user info
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Scroll shadow effect
+  // Navbar scroll effect
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ✅ Check auth status using deployed backend URL (via axios instance)
+  // ✅ Check auth status on route change
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        await API.get("/auth"); // ✅ Your backend route to check auth
+        const res = await API.get("/auth"); // ✅ maps to /api/auth
         setIsLoggedIn(true);
+        setUser(res.data); // { _id, email }
       } catch (error) {
         setIsLoggedIn(false);
+        setUser(null);
       }
     };
     checkLoginStatus();
@@ -33,8 +36,9 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await API.post("/auth/logout"); // ✅ Uses axios instance
+      await API.post("/auth/logout"); // ✅ logout route
       setIsLoggedIn(false);
+      setUser(null);
       navigate("/login");
     } catch (error) {
       console.error("Sign Out failed:", error);
@@ -58,9 +62,9 @@ export default function Navbar() {
           <span>MindMate</span>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8 text-lg font-medium">
-          {navLinks.map((link) => (
+          {navLinks.map(link => (
             <Link
               key={link.name}
               to={link.path}
@@ -74,10 +78,11 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Account Dropdown */}
           <div className="relative group ml-4">
             <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-md">
               <UserCircle size={20} />
-              <span>Account</span>
+              <span>{user ? user.email : "Account"}</span>
               <svg className="ml-1 w-4 h-4 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
@@ -124,7 +129,7 @@ export default function Navbar() {
         isMobileMenuOpen ? 'max-h-screen opacity-100 py-2' : 'max-h-0 opacity-0'
       } bg-blue-700`}>
         <div className="flex flex-col items-center">
-          {navLinks.map((link) => (
+          {navLinks.map(link => (
             <Link
               key={link.name}
               to={link.path}
