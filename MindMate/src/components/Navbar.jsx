@@ -22,7 +22,7 @@ export default function Navbar() {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        await API.get("/auth/me"); // ✅ Your backend route to check auth
+        await API.get("/auth"); // ✅ Your backend route to check auth
         setIsLoggedIn(true);
       } catch (error) {
         setIsLoggedIn(false);
