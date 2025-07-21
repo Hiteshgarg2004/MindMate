@@ -17,7 +17,7 @@ connectDb();
 // ✅ CORS setup for credentials + specific origin
 app.use(
   cors({
-    origin: "https://mind-mate-dun.vercel.app/", // frontend origin
+    origin: "https://mind-mate-dun.vercel.app", // frontend origin
     credentials: true,
   })
 );
