@@ -33,9 +33,9 @@ export const signUp = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false, // Set to true in production
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "None",     // ✅ for cross-site cookies
+      secure: true,         // ✅ must be true when using "None"
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     return res.status(201).json({
@@ -47,7 +47,6 @@ export const signUp = async (req, res) => {
     return res.status(500).json({ message: `Signup error: ${error.message}` });
   }
 };
-
 
 // =============================
 // ✅ LOGIN
@@ -69,8 +68,8 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false, // ✅ Use true in production
+      sameSite: "None",     // ✅
+      secure: true,         // ✅
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -92,8 +91,8 @@ export const logOut = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false, // match above
+      sameSite: "None", // ✅ match above
+      secure: true,     // ✅
     });
     return res.status(200).json({ message: "Logged out successfully." });
   } catch (error) {
@@ -102,9 +101,11 @@ export const logOut = async (req, res) => {
   }
 };
 
+// =============================
+// ✅ GET ME
+// =============================
 export const getMe = async (req, res) => {
   try {
-    // You correctly set req.user = { userId: ... } in middleware
     const user = await User.findById(req.user.userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
