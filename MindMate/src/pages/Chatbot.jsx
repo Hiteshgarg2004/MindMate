@@ -52,24 +52,25 @@ export default function Chatbox() {
     }
   };
 
-  const fetchBotReply = async (msg) => {
-    const response = await fetch("http://localhost:5000/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({ message: msg })
-    });
+const fetchBotReply = async (msg) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    credentials: "include", // this enables sending cookies
+    body: JSON.stringify({ message: msg })
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`API error: ${response.status} - ${errorData.error || 'Unknown error'}`);
-    }
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`API error: ${response.status} - ${errorData.error || 'Unknown error'}`);
+  }
 
-    const result = await response.json();
-    return result.reply || "I'm sorry, I couldn't generate a response.";
-  };
+  const result = await response.json();
+  return result.reply || "I'm sorry, I couldn't generate a response.";
+};
+
 
   const formatTimestamp = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
